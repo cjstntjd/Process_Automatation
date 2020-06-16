@@ -1,4 +1,4 @@
-# Process_Automatation
+# process Automatation
 A program that receives measurements from a power measurement device and corrects errors and stores the results to determine missing values.
 
 Layers of Software
