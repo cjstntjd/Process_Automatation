@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+<!-- sortable drag & drop -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"/></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&family=Poor+Story&display=swap" rel="stylesheet">
+<style>
+ body{
+   background-color: #B7E5BF ;
+ }
+  div{
+    width:100%;
+  }
+
+.top{
+  font-family: 'Noto Sans KR', sans-serif;
+  float: left;
+  width: 440px;
+  overflow: auto;
+  height: 50px;
+  padding: 10px;
+  margin-left: 45px;
+  margin-top: 10px;
+  border: 3px dashed #fff;
+  height: static;
+  margin-bottom: 15px;
+
+}
+
+#send{
+  font-family: 'Noto Sans KR', sans-serif;
+  outline: 2px dashed #92b0b3 ;
+  outline-offset:-7px;
+  text-align: center;
+  transition: all .15s ease-in-out;
+  width: 100px;
+  height: 40px;
+  background-color: gray;
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 20px;
+  top: 35px;
+  left: 365px;
+  overflow: auto;
+}
+
+#testTable {
+  font-family: 'Noto Sans KR', sans-serif;
+  width: 500px;
+  margin-top: 5px;
+  margin-left: 30px;
+  margin-bottom: 10px;
+  border-collapse: collapse;
+  overflow: auto;
+
+}
+#testTable th,
+#testTable td {font-family: 'Noto Sans KR', sans-serif; padding: 5px 12px; text-align: center; border: 2px solid #fff; }
+#testTable th { font-family: 'Noto Sans KR', sans-serif; background: #fff; }
+#testTable .btn_delete {
+     font-family: 'Noto Sans KR', sans-serif;
+     padding: 3px 10px;
+     background: #fbdb65;
+     border: none;
+     cursor: pointer;
+     align-self:auto;
+     float: left;
+     left:455px;
+     margin-top: -14px;
+     font-size: 15px;
+     font-weight: bold;
+     text-align: center;
+     overflow: auto;
+}
+
+button{
+  align-self:auto;
+  position:absolute;
+  left:458px;
+  overflow: auto;
+}
+
+#checkDB{
+  font-family: 'Noto Sans KR', sans-serif;
+  outline: 2px dashed #92b0b3 ;
+  outline-offset:-7px;
+  text-align: center;
+  transition: all .15s ease-in-out;
+  width: 100px;
+  height: 40px;
+  background-color: gray;
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 20px;
+  top: 30px;
+  overflow: auto;
+  left:600px;
+
+}
+#processAjax{
+  position:absolute;
+  left:550px;
+}
+
+#text_add{
+  font-family: 'Noto Sans KR', sans-serif;
+  position: relative;
+  margin-left: 50px;
+  text-align: center;
+  margin-top: 5px;
+  overflow: auto;
+}
+
+input[type="text"]{
+  width:400px;
+  height:auto;
+  font-size: 15px;
+  font-weight: bold;
+  overflow: auto;
+
+}
+
+.result{
+  font-family: 'Noto Sans KR', sans-serif;
+  float:right;
+  width:300px;
+  overflow: auto;
+  height: 50px;
+  margin-top: 10px;
+  margin-right: 20px;
+  border: 3px dashed #fff;
+  height: static;
+}
+.fake{
+  font-family: 'Noto Sans KR', sans-serif;
+  float:right;
+  width: 600px;
+  height: 100px;
+  padding: 20px;
+  margin-top: 10px;
+  margin-right: 20px;
+  border: 3px dashed #B7E5BF ;
+  height: static;
+}
+
+#result_item{
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #000;
+  text-align: center;
+}
+
+#checkbox{
+  opacity: 0;
+}
+
+.multi-line-highlightor {
+  font: 20px sans-serif;
+  text-align: left;
+  font-weight: bold;
+  width: 50%;
+  position: relative;
+
+}
+
+.multi-line-highlightor > span {
+  box-shadow: 0 .35em 0 0 orange, 0 .35em 0 0 orange;
+}
+
+.multi-line-highlightor span span {
+  position: relative;
+  top: .55em;
+  padding: 0 1rem;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+</style>
+</head>
+  <div style="width:1250px">
+  <body>
+  <table id="testTable">
+  <colgroup>
+    <col style="width: 1%">
+    <col style="width: 70%">
+    <col style="width: 20%">
+  </colgroup>
+  <script>
+
+    function action_add(){
+      var text_add = $("#text_add").val();
+      if (text_add==""){
+        alert("내용을 입력하세용");
+        return
+      }
+      var s = "<tr><td><input type='checkbox' id='checkbox' checked='checked' disabled='disabled'></td><td id='contents'>"+text_add+"</td>";
+      s += "<td><button type='button' class='btn_delete' onclick='deleteClick()'>Delete</button></td></tr>";
+      $("#testTable tr:last").after(s);
+
+    };
+
+    function deleteClick(){
+      var eventTarget = document.getElementsByClassName('btn_delete');
+      console.log(eventTarget);
+      for ( var i = 0; i<eventTarget.length; i++){
+        eventTarget[i].addEventListener('click',function(){
+          console.log('event동작');
+        });
+      };
+      for (var i=1; i<eventTarget.length; i++) {
+        // for문을 1부터 돌림으로써 가장 위에있는 example surge는 삭제 안되도록 함.
+        eventTarget[i].addEventListener('click', function() {
+        var parent = document.querySelector('#testTable tbody')
+        parent.removeChild(this.parentElement.parentElement)
+        i --
+      });
+    };
+
+  };
+
+    function checkDB(){
+      var model_name = $("#model_name").text();
+      var model_mode = $("#model_mode").text();
+      var db_key = {'model_name':model_name,
+                    'model_mode':model_mode};
+
+      var returnObject="";
+      $.ajax({
+        url:"/Account/processSearch",
+        dataType:"text",   // ajax 통신을 통해 주고 받는 데이터형을 설정해야 한다. 멋모르고 json 하면 ㄴㄴ
+        contentType:"application/json; charset=UTF-8",
+        type:"post",
+        data:JSON.stringify(db_key), // ajax_object를 JSON string형태로 변환
+        async:false,
+        success: function(response){
+          alert('DB에 존재하는지 안하는지 체크 완료');
+          // 만약 db에 존재한다면 저장되어있는 mode_process 목록 가져와서 보여주기.
+          //response - DB에 존재하는 값을 불러오는 작업
+          showDB(response);
+      }, error : function(request,status,error){
+        alert("AJAX_ERROR __ 개발자를 부르세요");
+        alert(status);
+        alert(error);
+      }
+
+    });
+  };
+
+    function showDB(result){
+        $("#result").empty();
+        var show_list = $("#result");
+        var result = result;
+        result=result.replace('[',"");
+        var result_and_date=result.split(']');
+        var result_item_list = result_and_date[0].split(',');
+        var result_date = result_and_date[1];
+        result_date = result_date.replace(']',"");
+
+        var s = "<br><span> Updated : "+result_date+"</span>";
+        show_list.append(s);
+        for(var item in result_item_list){
+
+          var s = "<div class='multi-line-highlightor'> <span> <span id='result_item'>";
+          s += result_item_list[item] + "</span></span></div>";
+
+          show_list.append(s);
+      }
+    };
+
+    function send(){
+      $("#result").empty();  // send 버튼 눌렀을 때 새로운 값들이 들어가도록 하기 위해
+      var result_list = $("#result");
+      var rowData = new Array();
+      var tdArr = new Array();
+      var chk = $("input[id=checkbox]:checked");
+      console.log(chk);
+
+
+      //체크된 체크박스 값을 가져온다.
+      chk.each(function(i){  // each함수는 반복문과 같은 역할을 한다.
+        var tr = chk.parent().parent().eq(i);
+        var td = tr.children();
+
+        //체크된 row의 모든 값을 배열에 담는다.
+        rowData.push(tr.text());
+        var result = td.eq(1).text();
+
+        // 가져온 ㄱ밧을 배열에 담는다.
+        tdArr.push(result);
+        console.log("결과:",result);
+
+
+        var s = "<div class='multi-line-highlightor'> <span> <span id='result_item'>";
+        s +=result+"</span></span></div>";
+
+        result_list.append(s);
+        //tdArr을 보내고자 하는 대상과 함께 보내면 된다 (추가 구현)
+      });
+
+      var model_name = $("#model_name").text();
+      var model_mode = $("#model_mode").text();
+
+      console.log(model_name);
+      var btn_save = "<br><form method='POST' enctype='multipart/form-data' id='ajaxTestForm' name='ajaxTestForm'>";
+      btn_save += "<input type='hidden' name='model_name'/>"+model_name+"<br>";
+      btn_save += "<input type='hidden' name='model_mode'/>"+model_mode+"<br>";
+      btn_save += "<input type='hidden' name='mode_process'/>"+tdArr+"</form>";
+
+      result_list.append(btn_save);
+      var ajax_object ={
+        'model_name':model_name,
+        'model_mode':model_mode,
+        'mode_process':tdArr,
+        'csrfmiddlewaretoken':'{{csrf_token}}',
+      };
+
+
+      $.ajax({
+        url:"/Account/processSave", // 여기에 어디 저장소랑 통신할지를 표시해야한다.
+        dataType:"text",   // ajax 통신을 통해 주고 받는 데이터형을 설정해야 한다. 멋모르고 json 하면 ㄴㄴ
+        contentType:"application/json; charset=UTF-8",
+        type:"post",
+        data:JSON.stringify(ajax_object), // ajax_object를 JSON string형태로 변환
+        success: function(){
+          alert('DB에 저장 성공');
+          console.log(ajax_object);
+        },
+        error : function(request,status,error){
+          alert("AJAX_ERROR __ 개발자를 부르세요");
+          alert(status);
+          alert(error);
+        }
+      });
+
+      //$("#result").html(tdArr);
+    };
+
+
+  </script>
+
+  <div class="top" position="inherit">
+      <!-- 해당 모델명, 모델 모드를 javascript 함수 인자로 받아 오면될 듯-->
+        Model: <span name="model_name" id="model_name">SAMSUNG GALAXY S20</span> <br>
+          <!-- 한글로 하면 깨짐,. 해결책 연구 바람.-->
+        Mode:  <span name="model_mode" id="model_mode">2</span>
+      </div>
+  <br>
+  <button type="button" id="send" onclick="send()"> SEND </button>
+  <button type="button" id="checkDB" onclick="checkDB()"> Check </button>
+
+  <div class="fake" id="result">
+  </div>
+<!-- 우선 DB설계가 되어있지 않으니깐 모델명과 모델모드를 html내에서 받아와 DB에 존재하는지 체크하고 받아오겠다-->
+
+<thead>
+  <tr>
+    <th> # </th>
+    <th>Contents</th>
+    <th>Delete</th>
+  </tr>
+</thead>
+
+<tbody>
+  <tr>
+    <td><input type="checkbox" id="checkbox" disabled="disabled"></td>
+    <td id='contents'>---- [Example] Surge ----</td>
+    <td>
+      <button type="button" class="btn_delete" >Delete</button>
+    </td>
+  </tr>
+
+  <tr>
+    <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+    <td id='contents'>RE</td>
+    <td>
+      <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+    </td>
+  </tr>
+
+  <tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+    <td id='contents'>CE</td>
+    <td>
+      <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+    </td>
+  </tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>Flicker</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>Harmonics</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>RS</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>CS</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>ESD</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>MF</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>Burst</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>Surge</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+<tr>
+  <td><input type="checkbox" id="checkbox" checked="checked" disabled="disabled"></td>
+  <td id='contents'>Voltage Dip</td>
+  <td>
+    <button type="button" class="btn_delete" onclick="deleteClick()">Delete</button>
+  </td>
+</tr>
+
+
+
+</tbody>
+</table>
+<input id="text_add" type="text" name="newAdd" placeholder="새로운 process 추가" autocomplete=off onfocus="this.value='';return true;" />
+<input type="button" id="btn_add" value="추가" onclick="action_add()" />
+
+
+
+</body>
+</div>
+</html>

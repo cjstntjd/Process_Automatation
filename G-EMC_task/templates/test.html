@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .typing-txt{display: none;}
+ul{list-style:none;}
+.typing ul li{
+  display:block;
+}
+.typing ul li.on {
+  display: inline-block;
+  animation-name: cursor;
+  animation-duration: 0.3s;
+  animation-iteration-count: infinite;
+}
+@keyframes cursor{
+  0%{border-right: 1px solid #fff}
+  50%{border-right: 1px solid #000}
+  100%{border-right: 1px solid #fff}
+}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="typing-txt">
+      <ul>
+        <li>안녕하세요. 2020 유엘코리아 인턴 정영환,박소빈 입니다.<br></li>
+        <li>지난 6개월 동안 THANK YOU <br></li>
+        <li>특히,General EMC의 최창영 부장님과 송혜림 사원님 <br></li>
+        <li>Mobile EMC/RF의 이준환 부장님과 윤현식 대리님과 오재현 사원님 <br></li>
+        <li>SAR의 김성훈 차장님과 양은희 사원님, 이상화 대리님 <br></li>
+        <li> 너무너무 감사해요 :) <br></li>
+      </ul>
+    </div>
+
+    <div class="typing">
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+
+  </body>
+</html>

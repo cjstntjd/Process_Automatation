@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="UTF-8">
+  <head>
+    <meta charset="utf-8">
+    <title>UL korea G-EMC Auto</title>
+
+
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+    <link href="/static/css/jumbotron-narrow.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Patua+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
+    <script src="/static/js/jquery-1.11.2.js"></script>
+    <script src="/static/js/dash-sobin.js"></script>
+    <script src="../static/js/RUlogin.js"></script>
+
+        <script>
+		$(function(){
+			    $.ajax({
+        			url: '/getAllWishes',
+				      method: 'GET',
+			    success:function(response) {
+					console.log(response);
+					var data = JSON.parse(response);
+					var itemsPerRow = 0;
+
+					var div = $('<div>').attr('class','row');
+					for(var i=0;i<data.length;i++){
+						console.log(data[i].Title);
+
+						if(itemsPerRow<3){
+							console.log(i);
+							if(i==data.length-1){
+								div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Description,data[i].FilePath,data[i].Like,data[i].HasLiked,data[i].rate));
+								$('.well').append(div);
+							}
+							else{
+							div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Description,data[i].FilePath,data[i].Like,data[i].HasLiked,data[i].rate));
+							itemsPerRow++;
+							}
+						}
+						else{
+							$('.well').append(div);
+							div = $('<div>').attr('class','row');
+							div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Description,data[i].FilePath,data[i].Like,data[i].HasLiked,data[i].rate));
+							if(i==data.length-1){
+								$('.well').append(div);
+							}
+							itemsPerRow = 0;
+						}
+					}
+
+			        },
+			        error:function(error){
+			        	console.log(error);
+			        }
+    			});
+
+			$(document).on('click','[id^="btn_"]',function(){
+				var spId = $(this).attr('id').split('_')[1];
+				//alert($(this).attr('id').split('_')[1]);
+				$.ajax({
+					url: '/addUpdateLike',
+					method: 'POST',
+					data: {wish:$(this).attr('id').split('_')[1],like:1},
+					success: function(response){
+
+						var obj = JSON.parse(response);
+
+						if(obj.likeStatus!=""){ // 좋아요 버튼 업데이트 후 현재 좋아요 누른 사람들의 명단(최초 만든이 제외)
+							console.log(obj.likeStatus);
+              console.log(obj.likeStatus[0]);
+							//$('#span_'+spId).html('&nbsp;You & '+ (Number(obj.total)-1) + ' Others');
+              var hasLiked_list ="";
+              var likeSpan = $('<span>').attr({'aria-hidden':'true','id':'span_'+spId,'style':'font-size:15px','float':'left'});
+
+              for (var ls in obj.likeStatus){
+                console.log("#");
+                console.log(obj.likeStatus[ls]);
+                hasLiked_list += obj.likeStatus[ls];
+                if (ls<obj.likeStatus.length-1){
+                  hasLiked_list += ',  ';
+                }
+              }
+              $('#span_'+spId).html('&nbsp;with&nbsp;&nbsp;<p style="font-weight:bold; display:inline; overflow:auto">'+ hasLiked_list+'</p>');
+            }
+						else{
+							$('#span_'+spId).html('&nbsp;with&nbsp;&nbsp;<p style="font-weight:bold; display:inline">'+hasLiked_list+ '</p>'); // with_join_show : 프로젝트 만든사람
+						}
+			},
+					error: function(error){
+						console.log(error);
+					}
+				});
+			});
+		})
+
+
+		function CreateThumb(id,title,desc,filepath,like,hasLiked,mode_progress){
+			var mainDiv = $('<div>').attr('class','col-sm-4 col-md-4');
+			var thumbNail = $('<div>').attr({'class':'thumbnail','style':'text-align:center'});
+			//var img = $('<img>').attr({'src':filepath,'data-holder-rendered':true,'type':'button','style':'height: 150px; width: 150px; display: block'});
+      var img = $('<button>').attr({'type':'button','class':'btn btnEvent' ,'id':'img_btn'+id});
+      var model_name = 'img_btn'+id;
+
+
+      var d_img_href = '/prac?model_name'+id;
+      var img_href = $('<a>').attr({'href':d_img_href});
+      var img_src = $('<img>').attr({'src':filepath,'data-holder-rendered':true,'style':'height: 180px; width: 200px; align:"center"; margint-top:10px ', 'alt':'btnImages', 'class':'btnImages' ,'onclick':''});
+
+      var caption = $('<div>').attr('class','caption');
+			var title = $('<h3>').text(title);
+			var desc = $('<p style="font-size:15px">').text(desc);
+
+      var g_btn = $('<progress>').attr({'id':'go_'+id,'value':mode_progress,'max':'100','class':'btn btn-danger active btn-block'});
+
+			var p = $('<p>');
+			var btn = $('<button>').attr({'id':'btn_'+id,'type':'button','class':'btn btn-secondary btn-sm'});
+			var span = $('<span>').attr({'class':'glyphicon glyphicon-thumbs-up','aria-hidden':'true'});
+
+			var likeSpan = $('<span>').attr({'aria-hidden':'true','id':'span_'+id,'style':'font-size:15px','float':'left'});
+
+      //var with_join_show = with_join;
+
+
+			if(hasLiked != ""){
+        console.log(hasLiked);
+        var hasLiked_list = "";
+        for (var a in hasLiked){
+          console.log(a);
+          hasLiked_list += hasLiked[a];
+          if (a<hasLiked.length-1){
+            hasLiked_list += ',  ';
+          }
+			  }
+        likeSpan.html('&nbsp;with&nbsp;&nbsp;<p style="font-weight:bold; display:inline; overflow:auto">'+ hasLiked_list+'</p>'); //(Number(like)-1)
+
+
+      }
+			else{
+				likeSpan.html('&nbsp;with&nbsp;&nbsp;<p style="font-weight:bold; display:inline">'+ "No one" + '</p>'); // with_join_show : 프로젝트 만든사람
+			}
+
+      img.append(img_href.append(img_src));
+
+			p.append(btn.append(span));
+			p.append(likeSpan);
+
+
+			caption.append(title);
+			caption.append(desc);
+
+      caption.append(g_btn);
+
+			caption.append(p);
+
+			thumbNail.append(img);
+			thumbNail.append(caption);
+			mainDiv.append(thumbNail);
+			return mainDiv;
+
+
+		}
+
+
+	</script>
+
+    <style>
+	.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+  .whoRU{
+    color:#1C1C1C;
+  }
+
+    </style>
+
+  </head>
+
+  <body>
+
+   <div class="container" style="font-family: 'Zilla Slab', serif">
+      <div class="header">
+        <span class="whoRU" style="font-family: 'Noto Sans KR', sans-serif; font-size:25px;  font-weight:bold ; color:#FFBF00" >{{user_name}},  </span>
+        <span class="whoRU" style="font-size:20px; ">Your Future Starts Today ♪♬ </span>
+        <nav>
+          <ul class="nav nav-pills pull-right">
+	          <li role="presentation" class="active"><a href="#">EMC Task</a></li>
+	          <li role="presentation"><a href="/userHome">Edit Task</a></li>
+	          <li role="presentation"><a href="/showAddWish">Add Task</a></li>
+            <li role="presentation" ><a href="/logout">Logout</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted" style="padding-left:400px">
+          <a href="/">
+            <img src="/static/images/logo_color_3.png" style="width:350px; height:150px"/>
+          </a>
+          </h3>
+      </div>
+
+      <div class="well" style="font-family: 'Noto Sans KR', sans-serif; font-size:20px">
+        <span><img src="/static/images/UL.png" style="width:50px; height:50px"/></span>
+        <span style="font-size:25px; font-weight:bold">&nbsp;All registered tasks</span>
+        <p></p>
+      </div>
+      <footer class="footer">
+        <p>&copy; UL korea SUW Lab Designed by YoungHwan & Sobin</p>
+      </footer>
+
+    </div>
+  </body>
+</html>
