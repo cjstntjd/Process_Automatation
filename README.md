@@ -58,11 +58,20 @@ Agile 방법론
 에자일 방법론은 고객과의 협력을 중시하고 프로세스나 도구에 국학되 지 않는 자기 적응적 방식을 채택하는데 일정한 주기를 가지고 프로토 타입을 만들어 내어 고객의 요구사항을 반영하기 쉽고 변화에 빠르게 대 응할수 있다는 장점이 있다.
 
 INDEX
-1 . Introduction 
+
+1.Introduction 
+
 2.OverallDescription
+
 3.SystemFeatures
+
 4.Functional & Nonfunctional Req 
+
 5.Conclusions
+
+
+
+
 
 
 1. Introduction
@@ -76,20 +85,34 @@ Produce a common task scheduler aimed at realizing open software that is unaffec
 The page is customized for G-EMC internal work procedures and is designed in consideration of flexibility and procedural characteristics in response to random unexpected situations in the work. The development and design of the service were led by Dankook University's mobile system engineering interns, and copyrights on the entire design and layout are given to the 2020 UL Korea intern.
 
 C. Project Scope
+
 The scope of the project is as follows.
+
 Function 1. Show the team's scope of work clearly
+
 Functional2. Modification of team work will be possible
+
 Function 3. Make it visible to facilitate communication within the team.
+
 Function 4. Automatically generate test results and reports
+
 Function 5. Report periodically to the responsible person in charge Function 6. Maintenanceable design method
+
 
 The above functions encourage the accuracy, professionalism, and communication between team members, and facilitate the convenience of employees through quick task identification.
 
 2. Overall Description
+
 This chapter describes the overall flow and outline of the project. It looks at the project from the needs of the project, from the perspective of the employees and from the perspective of the Director, and also describes the functional aspects of what should be included.
+
+
 system requirements
+
 In the case of the G-EMC team, there is a great deal of work, and it is inevitable that many employees will be able to perform complex tasks simultaneously. Therefore, the Director wants to see a system that can observe the staff's work and the team's overall progress at a glance.
+
+
 Product Function
+
 1. There will be a channel in which team members can share 2. Sharing work among team members will be possible
 3. The person in charge will be able to identify all the tasks 4. Stay true to security
 5. You will be able to automatically print your report. 6. Flexible system for each test mode
@@ -97,6 +120,7 @@ Additional staff requirements are collected to produce meaningful work scheduler
 Based on the information received from Director Choi and Song Hye-rim, the entire flow chart is planned and applied to the system.
 
 Program Tools
+
 - Python 3.7
 - Flask
 - html
